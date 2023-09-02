@@ -4,10 +4,6 @@ import requests
 import json
 import os
 
-def escape_text_for_json(text):
-    """Escapes text for JSON encoding."""
-    return json.dumps(text)
-
 def send_tweet_from_file(filename, api_url="http://localhost:5000/sendtweet"):
     """
     Sends a tweet from a local API by reading the message from a file.
