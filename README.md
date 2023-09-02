@@ -55,7 +55,6 @@ python Not-Another-Twitter-BOT.py
 
 3. For tweet dispatches, employ the `/sendtweet` endpoint:
 ```bash
-Escape the quotes:
 curl -X POST -H "Content-Type: application/json" -d "{\"message\":\"\\\"Hello, World!\\\"\"}" http://127.0.0.1:5000/sendtweet
 ```
 
