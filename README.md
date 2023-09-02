@@ -32,7 +32,7 @@ Set up your environment variables:
 ```bash
 export CLIENT_ID=your_twitter_client_id
 export CLIENT_SECRET=your_twitter_client_secret
-export REDIRECT_URI=your_redirect_uri
+export REDIRECT_URI=http://127.0.0.1:5000
 ```
 
 ## Usage
