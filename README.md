@@ -55,10 +55,7 @@ python Not-Another-Twitter-BOT.py
 
 3. For tweet dispatches, employ the `/sendtweet` endpoint:
 ```bash
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"message":"Your Tweet Content Here"}' \
-  http://localhost:5000/sendtweet
+curl --header "Content-Type: application/json" --request POST --data '{"message":"Your Tweet Content Here"}' http://localhost:5000/sendtweet
 ```
 
 
