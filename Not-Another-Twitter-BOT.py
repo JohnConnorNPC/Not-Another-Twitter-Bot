@@ -72,49 +72,17 @@ def post_tweet(message, token):
         },
     )
 
-@app.route("/")
-def demo():
-    twitter = make_token()
-    authorization_url, state = twitter.authorization_url(
-        auth_url, code_challenge=code_challenge, code_challenge_method="S256"
-    )
-    session["oauth_state"] = state
-    return redirect(authorization_url)
+# Decoding methods
+def decode_base64(encoded_message):
+    return base64.b64decode(encoded_message).decode()
 
-@app.route("/oauth/callback", methods=["GET"])
-def callback():
-    twitter = make_token()
-    code = request.args.get("code")
-    token = twitter.fetch_token(
-        token_url=token_url,
-        client_secret=client_secret,
-        code_verifier=code_verifier,
-        code=code,
-    )
-    token_expiry_timestamp = (datetime.now() + timedelta(seconds=token['expires_in'])).timestamp()
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("DELETE FROM oauth_tokens")
-    cursor.execute("INSERT INTO oauth_tokens (access_token, refresh_token, token_type, expiry_timestamp) VALUES (?, ?, ?, ?)", 
-                   (token['access_token'], token['refresh_token'], token['token_type'], token_expiry_timestamp))
-    db.commit()
-    return "Token stored successfully!"
+def decode_hex(encoded_message):
+    return bytes.fromhex(encoded_message).decode()
 
-@app.route('/sendtweet', methods=['POST'])
-def send_tweet_endpoint():
-    double_encoded_message = request.json.get('message')
-    
-    if not double_encoded_message:
+def send_tweet_with_decoded_message(decoded_message, db, cursor):
+    if not decoded_message:
         return jsonify({"error": "Message not provided"}), 400
 
-    # Decoding the double-encoded message
-    message = json.loads(double_encoded_message)
-   
-    if not message:
-        return jsonify({"error": "Message not provided"}), 400
-
-    db = get_db()
-    cursor = db.cursor()
     cursor.execute("SELECT access_token, refresh_token, token_type, expiry_timestamp FROM oauth_tokens LIMIT 1")
     data = cursor.fetchone()
     if not data:
@@ -145,9 +113,8 @@ def send_tweet_endpoint():
         except Exception as e:
             return jsonify({"error": "Failed to refresh token. Reauthorization might be needed.", "details": str(e)}), 500
 
-    response = post_tweet(message, token)
+    response = post_tweet(decoded_message, token)
     if response.status_code != 201:
-        # Try to refresh the token and resend
         try:
             twitter = make_token()
             refreshed_token = twitter.refresh_token(
@@ -161,7 +128,7 @@ def send_tweet_endpoint():
             cursor.execute("INSERT INTO oauth_tokens (access_token, refresh_token, token_type, expiry_timestamp) VALUES (?, ?, ?, ?)", 
                     (refreshed_token['access_token'], refreshed_token['refresh_token'], refreshed_token['token_type'], token_expiry_timestamp))
             db.commit()
-            response = post_tweet(message, refreshed_token)
+            response = post_tweet(decoded_message, refreshed_token)
             if response.status_code == 201:
                 return jsonify({"success": True, "message": "Tweet sent successfully after refreshing token!"})
             else:
@@ -171,5 +138,71 @@ def send_tweet_endpoint():
     else:
         return jsonify({"success": True, "message": "Tweet sent successfully!"})
 
+@app.route("/")
+def demo():
+    twitter = make_token()
+    authorization_url, state = twitter.authorization_url(
+        auth_url, code_challenge=code_challenge, code_challenge_method="S256"
+    )
+    session["oauth_state"] = state
+    return redirect(authorization_url)
+
+@app.route("/oauth/callback", methods=["GET"])
+def callback():
+    twitter = make_token()
+    code = request.args.get("code")
+    token = twitter.fetch_token(
+        token_url=token_url,
+        client_secret=client_secret,
+        code_verifier=code_verifier,
+        code=code,
+    )
+    token_expiry_timestamp = (datetime.now() + timedelta(seconds=token['expires_in'])).timestamp()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM oauth_tokens")
+    cursor.execute("INSERT INTO oauth_tokens (access_token, refresh_token, token_type, expiry_timestamp) VALUES (?, ?, ?, ?)", 
+                   (token['access_token'], token['refresh_token'], token['token_type'], token_expiry_timestamp))
+    db.commit()
+    return "Token stored successfully!"
+
+@app.route('/sendtweet', methods=['POST'])
+def send_tweet_endpoint_plain():
+    print(request.data)  # Log received data
+    message = request.data.decode('utf-8')
+
+    db = get_db()
+    cursor = db.cursor()
+    return send_tweet_with_decoded_message(message, db, cursor)
+
+@app.route('/sendtweet_base64', methods=['POST'])
+def send_tweet_endpoint_base64():
+    print(request.data)  # Log received data
+    encoded_message = request.json.get('message')
+    
+    if not encoded_message:
+        return jsonify({"error": "Message not provided"}), 400
+
+    decoded_message = decode_base64(encoded_message)
+
+    db = get_db()
+    cursor = db.cursor()
+    return send_tweet_with_decoded_message(decoded_message, db, cursor)
+
+@app.route('/sendtweet_hex', methods=['POST'])
+def send_tweet_endpoint_hex():
+    print(request.data)  # Log received data
+    encoded_message = request.json.get('message')
+    
+    if not encoded_message:
+        return jsonify({"error": "Message not provided"}), 400
+
+    decoded_message = decode_hex(encoded_message)
+
+    db = get_db()
+    cursor = db.cursor()
+    return send_tweet_with_decoded_message(decoded_message, db, cursor)
+
 if __name__ == "__main__":
     app.run()
+
