@@ -4,6 +4,7 @@
 
 ## 🌟 Highlights
 
+- Connect your account and send messages using the API.
 - Seamless integration with Twitter's V2 API through OAuth2.
 - Token rotation with SQLite.
 - Designated web endpoint for tweet dispatches.
