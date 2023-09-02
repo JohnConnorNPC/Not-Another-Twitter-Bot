@@ -38,7 +38,7 @@ def send_tweet_from_file(filename, api_url="http://localhost:5000/sendtweet"):
     headers = {"Content-Type": "plain/text"}
     
     try:
-        response = requests.post(api_url, headers=headers, data=data)
+        response = requests.post(api_url, headers=headers, data=message)
     except requests.RequestException as e:
         return f"error: Failed to send request. {str(e)}"
     
