@@ -57,6 +57,7 @@ python Not-Another-Twitter-BOT.py
 ```bash
 curl -X POST -H "Content-Type: plain/text" -d "Hello World!" http://127.0.0.1:5000/sendtweet
 ```
+![image](https://github.com/JohnConnorNPC/Not-Another-Twitter-Bot/assets/128232619/f8e548d1-77d5-4dab-84d4-af59b1ac3c5d)
 
 
 ## 📚 Examples
