@@ -11,6 +11,7 @@
 ## 🚀 Getting Started
 
 ### Spin Up a Twitter App
+- **https://developer.twitter.com/
 - **Craft a New App:** Inside the Developer Portal, head to 'Projects & Apps' and opt for 'Overview'. Next, hit the 'Create App' button.
 - **Jot Down App Details:** Assign a name and describe your app's mission.
 - **Tweak App Permissions:** Under 'User authentication settings', opt for 'Read and Write', the Type of app is Web App. set up the Callback URL (e.g., http://127.0.0.1:5000/oauth/callback).
