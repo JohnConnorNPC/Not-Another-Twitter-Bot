@@ -1,16 +1,15 @@
 filename = "message.txt"  # You can change this to the path of your file
 
 import requests
-import json
 import os
 
-def send_tweet_from_file(filename, api_url="http://localhost:5000/sendtweet"):
+def send_tweet_from_file(filename, api_url="http://127.0.0.1:5000/sendtweet"):
     """
     Sends a tweet from a local API by reading the message from a file.
     
     Args:
     - filename (str): Path to the file containing the message.
-    - api_url (str): URL endpoint for the API. Default is "http://localhost:5000/sendtweet".
+    - api_url (str): URL endpoint for the API. Default is "http://127.0.0.1:5000/sendtweet".
     
     Returns:
     - str: Response text or error message.
