@@ -33,18 +33,12 @@ def send_tweet_from_file(filename, api_url="http://localhost:5000/sendtweet"):
             message = file.read().strip()
     except UnicodeDecodeError:
         return "error: File encoding issue."
+   
 
-    # Convert message to JSON format
-    escaped_message = escape_text_for_json(message)
-    data = {
-        "message": escaped_message
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
+    headers = {"Content-Type": "plain/text"}
     
     try:
-        response = requests.post(api_url, headers=headers, json=data)
+        response = requests.post(api_url, headers=headers, data=data)
     except requests.RequestException as e:
         return f"error: Failed to send request. {str(e)}"
     
