@@ -61,7 +61,16 @@ curl -X POST -H "Content-Type: plain/text" -d "Hello World!" http://127.0.0.1:50
 
 ## 📚 Examples
 
-For insights on automating tweets using a file, peek into `sendtweet.py` in this repo. It showcases reading from a file and tweeting via NATBOT's endpoint.
+This repo provides an example of automating tweets using a file. The provided script, sendtweet.py, demonstrates how to read a message from a file and tweet it using NATBOT's API endpoint.
+
+Setup
+Prepare your file: Create a file named message.txt and write your tweet message inside. This file will be read by our script. You can change the file name if needed.
+API URL: By default, the script sends requests to http://127.0.0.1:5000/sendtweet. If your API endpoint is different, you can modify the api_url parameter accordingly.
+
+```bash
+python sendtweet.py
+```
+
 
 ## 📜 License
 
