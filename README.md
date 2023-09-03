@@ -4,7 +4,7 @@
 
 ## 🌟 Highlights
 
-- Connect your account and send messages using the API.
+- Connect your account and send and delete messages using the API.
 - Seamless integration with Twitter's V2 API through OAuth2.
 - Token rotation with SQLite.
 - Designated web endpoint for tweet dispatches.
@@ -59,6 +59,12 @@ python Not-Another-Twitter-BOT.py
 curl -X POST -H "Content-Type: plain/text" -d "Hello World!" http://127.0.0.1:5000/sendtweet
 ```
 ![image](https://github.com/JohnConnorNPC/Not-Another-Twitter-Bot/assets/128232619/f8e548d1-77d5-4dab-84d4-af59b1ac3c5d)
+
+4. To delete a tweet use the `/deletetweet/{tweetid}` endpoint
+```
+curl -X DELETE -H "Content-Type: plain/text" http://127.0.0.1:5000/deletetweet/1698179306609107353
+```
+![image](https://github.com/JohnConnorNPC/Not-Another-Twitter-Bot/assets/128232619/09bcce96-f463-466e-8732-2c5dd4814d63)
 
 
 ## 📚 Examples
